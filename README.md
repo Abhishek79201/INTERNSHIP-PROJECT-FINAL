@@ -12,49 +12,49 @@
 
 # Roles Management
 
-## Different levels of access based on job roles
+### Different levels of access based on job roles
 
-## Ability to manage roles and permissions
+### Ability to manage roles and permissions
 
 # Employees Management
 
-## Ability to manage employee information
+### Ability to manage employee information
 
-## Employee profile management
+### Employee profile management
 
-## Employee performance tracking
+### Employee performance tracking
 
 # Project Management
 
-## Ability to create, edit, and delete projects
+### Ability to create, edit, and delete projects
 
-## Task management and assignment
+### Task management and assignment
 
-## Reporting and performance tracking
+### Reporting and performance tracking
 
 # Leaves Management
 
-## Tracking employee vacation and sick leave
+### Tracking employee vacation and sick leave
 
-## Leave application and approval process
+### Leave application and approval process
 
-## Document sharing and collaboration
+### Document sharing and collaboration
 
 # Requests Management
 
-## Tracking of organization-wide requests
+### Tracking of organization-wide requests
 
-## Request approval and rejection process
+### Request approval and rejection process
 
 # Events/Notice/Announcement Management
 
-## Ability to create and manage events, notices, and announcements
+### Ability to create and manage events, notices, and announcements
 
-## Communication of events and announcements to employees
+### Communication of events and announcements to employees
 
 # Installation
 
-## Clone the repository to your local machine
+### Clone the repository to your local machine
 
 ## Navigate to the project directory and install dependencies using the following command:
 

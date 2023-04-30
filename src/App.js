@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import React, { useEffect, useState, useRef } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
@@ -43,7 +44,8 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 const App = () => {
   const [justifyActive, setJustifyActive] = useState('tab1');
   const [formFilled, setFormFilled] = useState(true);
-  const [isLoggedin, setisLoggedin] = useState(false);
+
+  const { isLoggedin, setisLoggedin } = useStateContext();
   const {
     setCurrentColor,
     setCurrentMode,
@@ -63,6 +65,7 @@ const App = () => {
     }
   }, []);
   const localData = JSON.parse(localStorage.getItem('UserDetail'));
+
   function initUser() {
     if (localData === null) {
       return [];
@@ -70,36 +73,69 @@ const App = () => {
     return localData;
   }
   const regName = useRef(null);
-  const regEmail = useRef(null);
-  const regUsername = useRef(null);
   const regPassword = useRef(null);
   const signupBtn = useRef(null);
+  const regEmail = useRef(null);
+  const regUsername = useRef(null);
+  const loginEmail = useRef(null);
+  const loginPassword = useRef(null);
   const [userDetail, setuserDetail] = useState(initUser);
+  function initCurrentUser() {
+    const localDataForCurrent = JSON.parse(
+      localStorage.getItem('currentUserDetail')
+    );
+    if (!localDataForCurrent) {
+      return {};
+    }
+    return localDataForCurrent;
+  }
+  const [currentUserDetail, setcurrentUserDetail] = useState(initCurrentUser);
+  const checkIfUserExists = (email, username) => {
+    const userData = JSON.parse(localStorage.getItem('UserDetail'));
+    if (!userData) {
+      return false; // if no data is saved in local storage, return false
+    }
+    const emailExists = userData.some((user) => user.regEmail === email);
+    const usernameExists = userData.some(
+      (user) => user.regUsername === username
+    );
+    return emailExists || usernameExists;
+  };
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    setuserDetail((prevData) => [
-      ...prevData,
-      {
-        name: regName.current.value,
-        regEmail: regEmail.current.value,
-        regUsername: regUsername.current.value,
-        regPassword: regPassword.current.value,
-      },
-    ]);
-    if (
-      regName.current.value.trim().length === 0
-      && regEmail.current.value.trim().length === 0
-      && regUsername.current.value.trim().length === 0
-      && regPassword.current.value.trim().length === 0) {
-      setisLoggedin(false);
+    const name = regName.current.value;
+    const email = regEmail.current.value;
+    const username = regUsername.current.value;
+    const password = regPassword.current.value;
+    if (checkIfUserExists(email, username)) {
+      // user already exists
+      alert('User already exists');
     } else {
-      setFormFilled(false);
+      // add user to local storage
+      const newUser = {
+        name,
+        regEmail: email,
+        regUsername: username,
+        regPassword: password,
+      };
+      const userData = JSON.parse(localStorage.getItem('UserDetail')) || [];
+
+      localStorage.setItem(
+        'UserDetail',
+        JSON.stringify([...userData, newUser])
+      );
+      // set current user and login status
+      setcurrentUserDetail(newUser);
+      setisLoggedin(true);
     }
   };
+
   useEffect(() => {
-    localStorage.setItem('UserDetail', JSON.stringify(userDetail));
-  }, [isLoggedin]);
+    if (userDetail.length > 0) {
+      localStorage.setItem('UserDetail', JSON.stringify(userDetail));
+    }
+  }, [userDetail]);
 
   const handleJustifyClick = (value) => {
     if (value === justifyActive) {
@@ -108,6 +144,37 @@ const App = () => {
 
     setJustifyActive(value);
   };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const email = loginEmail.current.value;
+    const password = loginPassword.current.value;
+    const userData = JSON.parse(localStorage.getItem('UserDetail'));
+    if (!userData) {
+      setisLoggedin(false);
+      return;
+    }
+    const loggedInUser = userData.find(
+      (user) => user.regEmail === email && user.regPassword === password
+    );
+    if (loggedInUser) {
+      localStorage.setItem(
+        'currentUserDetail',
+        JSON.stringify({
+          email: loggedInUser.regEmail,
+          name: loggedInUser.name,
+        })
+      );
+      setcurrentUserDetail(loggedInUser);
+      setisLoggedin(true);
+    } else {
+      alert('user is not registered !!!!');
+      setisLoggedin(false);
+    }
+  };
+
+  localStorage.setItem('currentUserDetail', JSON.stringify(currentUserDetail));
+
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
       {isLoggedin ? (
@@ -205,7 +272,7 @@ const App = () => {
 
           <MDBTabsContent>
             <MDBTabsPane show={justifyActive === 'tab1'}>
-              <form>
+              <form onSubmit={handleLogin}>
                 <div className="text-center mb-3">
                   <p>Sign in with:</p>
 
@@ -257,11 +324,13 @@ const App = () => {
                   wrapperClass="mb-4"
                   label="Email address"
                   id="form1"
+                  ref={loginEmail}
                   type="email"
                 />
                 <MDBInput
                   wrapperClass="mb-4"
                   label="Password"
+                  ref={loginPassword}
                   id="form2"
                   type="password"
                 />
@@ -371,7 +440,12 @@ const App = () => {
                   />
                 </div>
 
-                <MDBBtn className="mb-4 w-100" ref={signupBtn} disable={formFilled} type="submit">
+                <MDBBtn
+                  className="mb-4 w-100"
+                  ref={signupBtn}
+                  disable={formFilled}
+                  type="submit"
+                >
                   Sign up
                 </MDBBtn>
               </form>

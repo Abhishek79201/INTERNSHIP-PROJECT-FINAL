@@ -5,9 +5,14 @@ import { Button } from '.';
 import { userProfileData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
 import avatar from '../data/avatar.jpg';
-
 const UserProfile = () => {
-  const { currentColor } = useStateContext();
+  const { currentColor, setisLoggedin } = useStateContext();
+  const storedCurrentUserDetail = JSON.parse(
+    localStorage.getItem('currentUserDetail')
+  );
+  const handleReload = () => {
+    setisLoggedin(false);
+  };
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -28,14 +33,25 @@ const UserProfile = () => {
           alt="user-profile"
         />
         <div>
-          <p className="font-semibold text-xl dark:text-gray-200"> Michael Roberts </p>
-          <p className="text-gray-500 text-sm dark:text-gray-400">  Administrator   </p>
-          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400"> info@shop.com </p>
+          <p className="font-semibold text-xl dark:text-gray-200">
+            {storedCurrentUserDetail.name}
+          </p>
+          <p className="text-gray-500 text-sm dark:text-gray-400">
+            {' '}
+            Administrator{' '}
+          </p>
+          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400">
+            {' '}
+            {storedCurrentUserDetail.regEmail}
+          </p>
         </div>
       </div>
       <div>
         {userProfileData.map((item, index) => (
-          <div key={index} className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]">
+          <div
+            key={index}
+            className="flex gap-5 border-b-1 border-color p-4 hover:bg-light-gray cursor-pointer  dark:hover:bg-[#42464D]"
+          >
             <button
               type="button"
               style={{ color: item.iconColor, backgroundColor: item.iconBg }}
@@ -46,22 +62,29 @@ const UserProfile = () => {
 
             <div>
               <p className="font-semibold dark:text-gray-200 ">{item.title}</p>
-              <p className="text-gray-500 text-sm dark:text-gray-400"> {item.desc} </p>
+              <p className="text-gray-500 text-sm dark:text-gray-400">
+                {' '}
+                {item.desc}{' '}
+              </p>
             </div>
           </div>
         ))}
       </div>
       <div className="mt-5">
-        <Button
-          color="white"
-          bgColor={currentColor}
-          text="Logout"
-          borderRadius="10px"
-          width="full"
-        />
+        <button
+          type="button"
+          onClick={handleReload}
+          style={{
+            backgroundColor: currentColor,
+            color: 'white',
+            borderRadius: '10px',
+          }}
+          className={` text-1 p-3 w-100 hover:drop-shadow-xl hover:bg-${currentColor}`}
+        >
+          Logout
+        </button>
       </div>
     </div>
-
   );
 };
 

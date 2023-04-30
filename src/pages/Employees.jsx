@@ -21,7 +21,12 @@ import { Header } from '../components';
 const Employees = () => {
   const toolbarOptions = ['Search'];
   const [validated, setValidated] = useState(false);
-  const localData = JSON.parse(localStorage.getItem('EmployeesData'));
+  const storedCurrentUserDetail = JSON.parse(
+    localStorage.getItem('currentUserDetail')
+  );
+  const localData = JSON.parse(
+    localStorage.getItem(`EmployeesDataBy${storedCurrentUserDetail.name}`)
+  );
   function init() {
     if (localData === null) {
       return [];
@@ -62,7 +67,10 @@ const Employees = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem('EmployeesData', JSON.stringify(employeesData));
+    localStorage.setItem(
+      `EmployeesDataBy${storedCurrentUserDetail.name}`,
+      JSON.stringify(employeesData)
+    );
   }, [employeesData]);
   const editing = { allowDeleting: true, allowEditing: true };
 

@@ -1,3 +1,7 @@
+/* eslint-disable import/order */
+/* eslint-disable no-alert */
+/* eslint-disable comma-dangle */
+/* eslint-disable no-unused-vars */
 /* eslint-disable operator-linebreak */
 import React, { useEffect, useState, useRef } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -40,6 +44,7 @@ import {
 } from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { SiShopware } from 'react-icons/si';
 
 const App = () => {
   const [justifyActive, setJustifyActive] = useState('tab1');
@@ -113,6 +118,7 @@ const App = () => {
       alert('User already exists');
     } else {
       // add user to local storage
+
       const newUser = {
         name,
         regEmail: email,
@@ -125,6 +131,8 @@ const App = () => {
         'UserDetail',
         JSON.stringify([...userData, newUser])
       );
+      alert('New User Created');
+
       // set current user and login status
       setcurrentUserDetail(newUser);
       setisLoggedin(true);
@@ -252,6 +260,10 @@ const App = () => {
             justify
             className="mb-3 d-flex flex-row justify-content-between"
           >
+            <MDBContainer className="p-3 my-5 w-100  d-flex gap-4 align-items-center">
+              <SiShopware size={70} />
+              <h1>Hi,Welcome to Manager</h1>
+            </MDBContainer>
             <MDBTabsItem>
               <MDBTabsLink
                 onClick={() => handleJustifyClick('tab1')}
